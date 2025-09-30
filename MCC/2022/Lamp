@@ -1,0 +1,103 @@
+//
+//  main.cpp
+//  MCC_2022(6)
+//
+//  Created by Hea Seng Jun on 30/10/2022.
+//
+
+// code from others
+
+#include <iostream>
+#include <stdio.h>
+#include <vector>
+#include <cmath>
+#include <numeric>
+using namespace std;
+
+void solve(){
+   long long n,k;
+   cin>>n>>k;
+   vector<long long> p(n),b(n);
+   for(long long i=0;i<n;i++) cin>>p[i];
+   for(long long i=0;i<n;i++) cin>>b[i];
+
+   vector< pair<long long,long long> > Node;
+   for(long long i=0;i<n;i++){
+      long long L=p[i]-(b[i]-1);
+      long long R=p[i]+(b[i]-1);
+      Node.push_back({L,i});
+      Node.push_back({R+1,i}); //one index after right node
+      Node.push_back({p[i],i});
+   }
+   sort(Node.begin(),Node.end());
+
+   long long ans=0;
+   vector<long long> Condition(n,0);
+   //Condition: 1-Left, 2-Peak, 3-Right
+   //1-2: Increasing
+   //2-3:Decreasing
+
+   long long ka=0,kb=0; //ka: increasing count, kb: decreasing count
+   long long bright=0;
+   for(long long i=0;i<3*n-1;i++){
+      pair<long long,long long> f=Node[i];
+      long long x=f.first, ind = f.second;
+      Condition[ind]++;
+
+      if(Condition[ind]==1){
+         ka++;
+         bright++;
+      }
+      else if(Condition[ind]==2){
+         ka--; kb++;
+      }
+      else{
+         kb--;
+      }
+      if(Node[i+1].first==x) continue;
+
+
+      double delta = k-bright; //diff between k and current brightness
+      long long step=1e16;
+      if(ka!=kb && (delta/(ka-kb))>=0 ){
+         if(ka>kb) step=ceil(delta / (ka-kb) );
+                 //more steps to achieve enough brigtness
+         else step=floor(delta/(ka-kb));
+       }
+      else if(ka!=kb && (delta/(ka-kb))<0) step=floor(delta / (ka-kb));
+      long long x_prime=x+step; //brightness is enough
+
+      if(step>=0 && x_prime<Node[i+1].first){
+         if(ka>kb)
+            ans+=Node[i+1].first-x_prime; //目标节点至下一个节点的距离
+         else if(ka<kb) //现有亮度大于目标亮度；且是Decreasing
+            ans+=step+1; //step的意义：还有多少到 0，到 0 后不能再取
+            //+1 代表0点
+      }
+      else{
+         //【step<0】
+         //delta小于0：现有亮度大于目标亮度
+         //ka-kb小于0：现在是Decreasing，要倒退才能拿到目标亮度，矛盾；此时delta大于0
+
+         //x_prime > next node：目标节点大于下个节点 > 矛盾 (更新亮度和ans至下个节点)
+
+         //ka=kb : ans直接加上现在到下一个节点的距离
+          
+                 step=Node[i+1].first-x;
+         if(delta<=0) ans+=step;
+       }
+       bright+=(Node[i+1].first-x)*(ka-kb); //更新亮度到下一个节点
+   }
+
+   cout<<ans<<"\n";
+}
+
+int main(void) {
+   freopen("in.txt", "r", stdin);
+   freopen("out.txt", "w", stdout);
+   long long t;
+   cin >> t;
+   for (long long i = 0; i < t; i++) {
+      solve();
+   }
+}

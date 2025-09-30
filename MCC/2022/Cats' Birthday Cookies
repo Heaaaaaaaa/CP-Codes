@@ -1,0 +1,193 @@
+//
+//  main.cpp
+//  MCC_2022(4)
+//
+//  Created by Hea Seng Jun on 30/10/2022.
+//
+
+// algo from others
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <bitset>
+#include <cmath>
+using namespace std;
+#define wtf ios_base::sync_with_stdio(false);cin.tie(NULL);
+typedef unsigned long long ull;
+typedef long long ll;
+
+string rev(string oper)
+{
+	ll size=oper.size();
+	ll counter=0;
+	string temp;
+	for(ll i=0;i<size;i++)
+	{
+		if(oper[i]=='C')
+			{
+				counter++;
+			}
+		else 
+			{
+				temp+=oper[i];
+			}
+	}
+	for(ll i=0;i<counter;i++)
+	{
+		temp+='C';
+	}
+	oper=temp;
+	return oper;
+}
+
+string to_binary(ll i)
+{
+	if(i==0)
+	{
+		string binary="00";
+		return binary;
+	}
+	else if(i==2)
+	{
+		string binary="10";
+		return binary;
+	}
+	else 
+	{
+		return bitset<32>(i).to_string().substr(32 - log2(i));
+	}
+}
+
+int main() 
+{
+	wtf
+	freopen("in.txt","r",stdin);
+	freopen("out.txt","w",stdout);
+	
+	ll length,scroll,num;
+	cin >> length >> scroll >> num;
+	string oper[scroll];
+	for(ll i=0;i<scroll;i++)
+	{
+		cin >> oper[i];
+		oper[i]=rev(oper[i]);
+	}
+	
+	ll friends[num];
+	for(ll i=0;i<num;i++)
+	{
+		cin >> friends[i];
+	}
+	/*
+	4 2 4
+	ABCA
+	1 3 6 12
+	
+	b horz+1
+	c vert+1
+	
+	ABAC
+	00
+	10 = horz+1
+	101 = vert+1
+	1011 = vert+1 horz+1
+	3 0
+	2 1
+	1 2
+	0 3
+	*/
+	for(ll i=0;i<scroll;i++)
+	{
+		for(ll j=0;j<num;j++)
+		{
+			ll vert=0,horz=0,size,val,counter;
+			string binary;
+			val=(friends[j])-1;
+			//cout << val << '*' << ' ';
+			binary=to_binary(val);
+			//cout << binary << ' ';
+			size=binary.size();
+			counter=0;
+			
+			for(ll k=size-1;k>=0;k--)
+			{
+				//cout << counter << endl;
+				//cout << binary[k] << oper[i][counter] << endl;
+				if(binary[k]=='1')
+				{
+					if(oper[i][counter]=='B')
+					{
+						//cout << oper[i][counter] << ' ';
+						horz++;
+					}
+					else if(oper[i][counter]=='C')
+					{
+						//cout << oper[i][counter] << ' ';
+						vert++;
+					}
+				}
+				counter++;
+			}
+			horz=horz%2;
+			vert=vert%2;
+			if(horz==vert)
+			{
+				if(horz==1)
+				{
+					cout << 'd';
+				}
+				else 
+				{
+					cout << 'p';
+				}
+			}
+			else 
+			{
+				if(horz==1)
+				{
+					cout << 'q';
+				}
+				else
+				{
+					cout << 'b';
+				}
+			}
+			//cout<<horz<<" "<<vert<<endl;
+		}
+	}
+}
+
+/*
+For each test case:
+Create variables Horz=0, Vert=0 to count the number of each flips.
+
+Firstly, rearrange every instruction, so that all the C's lies at the back of the instruction. I do so for the reason stated later.
+
+Then, I convert the (decimal value-1)[because it start from position 0] for each friend into binary. 
+It actually comes from my observation, the first bit (The rightmost or the binary) will only be affected by the first instruction (The leftmost of the instruction), so on. 
+
+A: Do nothing.
+B: Horizontally flipped. Horz++
+C: Vertically flipped. Vert++
+
+So check if the nth bit of the binary(from the right) is 1:
+If it is, it is affected by the instruction, do the corresponding operation,
+else do nothing and proceed.
+
+The reason for leaving the C's behind:
+Instruction C actually don't change the position of the binary and decimal values. (if the binary is originally b1b2b3....bm, after operation C, it is still b1b2b3....bm)
+What C do, is when the decimal is larger than the total number of columns, where the last few bits (The leftmost bits) are those we should concern.
+
+eg 
+Ins: ABAAB
+Friend: 25 -> 11001
+Then do this
+ABAAB first instruction is A
+10011 first binary is 1, the rightmost 1
+
+1 -> A do nothing
+1 -> A do nothing
+B -> B horz++
+*/
+

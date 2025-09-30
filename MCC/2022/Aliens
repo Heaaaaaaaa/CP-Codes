@@ -1,0 +1,78 @@
+//
+// Created by Hea Seng Jun on 29/10/2022.
+//
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <stdio.h>
+#include <string>
+using namespace std;
+
+typedef  long long int ll;
+typedef  unsigned long long int ull;
+typedef vector<long long> vll;
+typedef vector<unsigned long long> vull;
+
+#define pb push_back
+#define wtf ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+int main(void)
+{
+    wtf
+    freopen("in.txt","r",stdin);
+    freopen("out.txt","w",stdout);
+    
+    ll test,length;
+    cin >> test;
+    /*
+    TFTF 
+    FTTF
+    
+    in first string,how many t means that there must have how many same element with s1 in s2;also as f;
+    so if there have same element with one,true-=1,else false-=1;
+    in TFTF,for "YES",they must have 2 same element in s2,2 opposite element in s2;
+    so if true and false is both equal to 0,it is yes;
+    else it is negative means already out of range so is no;
+    */
+    while(test--)
+    {
+        cin >> length;
+        string s1,s2;
+        ll t=0,f=0;
+        cin >> s1 >> s2;
+        for(ll i=0;i<length;i++)
+        {
+            if(s1[i]=='F')
+            {
+                //cout << s1[i] << endl;
+                f+=1;
+            }
+            if(s1[i]=='T')
+            {
+                //cout << s1[i] << endl;
+                t+=1;
+            }
+        }
+        for(ll i=0;i<length;i++)
+        {
+            if(s2[i]==s1[i])
+            {
+                t-=1;
+            }
+            else 
+            {
+                f-=1;
+            }
+        }
+        //cout << t << endl << f << endl;
+        if(t==0&&f==0)
+        {
+            cout << "YES" << endl;
+        }
+        else 
+        {
+            cout << "NO" << endl;
+        }
+    }
+}

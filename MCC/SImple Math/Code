@@ -1,0 +1,144 @@
+//
+//  main.cpp
+//  Simple_math
+//
+//  Created by Hea Seng Jun on 13/10/2022.
+//
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#define M 1000000007
+
+int addition(int n)
+{
+    int sum=0;
+    for(int r=1;r<=n;r++)
+    {
+        vector<bool> v(n);
+        fill(v.begin(), v.begin() + r, true);
+        do
+        {
+            for (int i = 0; i < n; ++i)
+            {
+                if (v[i])
+                {
+                   int a=(i+1);
+                   sum=(sum+a)%M;
+                   //cout << (i + 1) << " ";
+                }
+           }
+           //cout << "\n";
+        } while (prev_permutation(v.begin(), v.end()));
+    }
+    return sum;
+}
+
+int multiplication(int n)
+{
+    int sum=0;
+    double sum1=n/2.0*(n+1);
+    sum+=sum1;
+    for(int r=2;r<=n;r++)
+    {
+        vector<bool> v(n);
+        fill(v.begin(), v.begin() + r, true);
+        do
+        {
+            int temp=1;
+            for (int i = 0; i < n; ++i)
+            {
+                if (v[i])
+                {
+                    int a=(i+1);
+                    temp=(temp*a)%M;
+                    //cout << (i + 1) << " " << temp << ' ';
+                }
+                //cout << "\n";
+                //cout << temp << endl;
+           }
+            sum=(sum+temp)%M;
+            //cout << "\n";
+            //cout << sum << endl;
+        } while (prev_permutation(v.begin(), v.end()));
+    }
+    return sum;
+}
+
+int bitwise(int n)
+{
+    int sum=0;
+    double sum1=n/2.0*(n+1);
+    sum+=sum1;
+    for(int r=2;r<=n;r++)
+    {
+        vector<bool> v(n);
+        fill(v.begin(), v.begin() + r, true);
+        do
+        {
+            int temp=0;
+            for (int i = 0; i < n; ++i)
+            {
+                if (v[i])
+                {
+                    int a=(i+1);
+                    temp=(temp^a)%M;
+                   //cout << (i + 1) << " ";
+                }
+           }
+            sum=(sum+temp)%M;
+           //cout << "\n";
+        } while (prev_permutation(v.begin(), v.end()));
+    }
+    return sum;
+}
+
+/*
+·1
+ 2
+ 3
+ 4
+ 1 2
+ 1 3
+ 1 4
+ 2 3
+ 2 4
+ 3 4
+ 1 2 3
+ 1 2 4
+ 2 3 4
+ 3 4 1
+ 1 2 3 4
+*/
+
+int main()
+{
+    int n,p;
+    string bin;
+    cin >> bin >> bin >> n >> bin >> bin >> p >> bin;
+    getline(cin,bin);
+    
+    switch (p) {
+        case 1:
+            cout << addition(n);
+            break;
+        case 2:
+            cout << multiplication(n);
+            break;
+        case 3:
+            cout << bitwise(n);
+            break;
+            
+        default:
+            break;
+    }
+    
+    return 0;
+    
+}
+
+// {1,2,3}
+// 1 2 3      (scl=0)
+// 12 13 23   (scl=1)
+// 123        (scl=2)

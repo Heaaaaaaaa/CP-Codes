@@ -1,0 +1,132 @@
+//
+//  main.cpp
+//  MCC_2022(1)
+//
+//  Created by Hea Seng Jun on 29/10/2022.
+//
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <stdio.h>
+#include <string>
+using namespace std;
+
+typedef  long long int ll;
+typedef  unsigned long long int ull;
+#define wtf ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+int main(void)
+{
+    wtf;
+    /*freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);*/
+    ll test,length,counter;
+    cin >> test;
+
+    while(test--)
+    {
+        counter=0;
+        cin >> length;
+        string s[length];
+        for(ll j=0;j<length;j++)
+        {
+            cin >> s[j];
+        }
+        counter=0;
+        for(ll i=0;i<length;i+=1)
+        {
+            //cout << s[i] << s[i+1] << "\n";
+            if(s[i]=="WE")
+            {
+                if(s[i+1]=="KNOW")
+                {
+                    continue;
+                }
+                else if(s[i+1]=="DONT")
+                {
+                    continue;
+                }
+                else
+                {
+                    counter++;
+                }
+            }
+            else if(s[i]=="THEY")
+            {
+                if(s[i+1]=="KNOW")
+                {
+                    continue;
+                }
+                else if(s[i+1]=="DONT")
+                {
+                    continue;
+                }
+                else
+                {
+                    counter++;
+
+                }
+            }
+            else if(s[i]=="DONT")
+            {
+                if(s[i+1]=="KNOW")
+                {
+                    continue;
+                }
+                else
+                {
+                    counter++;
+                }
+            }
+            else if(s[i]=="KNOW")
+            {
+                if(s[i+1]=="WE")
+                {
+                    continue;
+                }
+                else if(s[i+1]=="THEY")
+                {
+                    continue;
+                }
+                else if(s[i+1]=="THAT")
+                {
+                    continue;
+                }
+                else
+                {
+                    counter++;
+
+                }
+            }
+            else if(s[i]=="THAT")
+            {
+                if(s[i+1]=="WE")
+                {
+                    continue;
+                }
+                else if(s[i+1]=="THEY")
+                {
+                    continue;
+                }
+                else
+                {
+                    counter++;
+                }
+            }
+            else
+            {
+                counter++;
+            }
+        }
+        //cout << counter << endl;
+        if(counter>1)
+        {
+            cout << "NO" << "\n";
+        }
+        else
+        {
+            cout << "YES" << "\n";
+        }
+    }
+}

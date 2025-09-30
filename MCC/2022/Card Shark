@@ -1,0 +1,154 @@
+//
+//  main.cpp
+//  MCC_2022(5)
+//
+//  Created by Hea Seng Jun on 30/10/2022.
+//
+
+// code from others
+
+#include <iostream>
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+#include <numeric>
+using namespace std;
+ 
+typedef  long long int ll;
+typedef  unsigned long long int ull;
+typedef vector<long long> vll;
+typedef vector<unsigned long long> vull;
+
+#define pb push_back
+#define haha ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+int main()
+{
+    freopen("Inp.txt","r",stdin);
+    freopen("out.txt","w",stdout);
+    long long int T;
+    cin>>T;
+    for (long long int t=0;t<T;t++)
+    {
+        long long int Scores=0;
+        vector<long long int> OC;
+        long long int Odds=0;
+        long long int Evens=0;
+        
+        
+        long int n;//N small decks
+        long int N;
+        cin>>n;
+        N=n;
+        unsigned long long int ESP=0;
+        unsigned long long int ESN=0;
+        bool ESNe=false;
+        for (long int Ns=0;Ns<N;Ns++)
+        {
+            
+            long int M;
+            cin>>M;
+            long int m=M;//This deck has M cards
+//            cout<<m<<endl;
+            Odds = 0;
+            Evens = 0;
+            int OE;
+            if (m%2==0)//Evens
+            {
+                OE=0;
+                for (long int i=0;i<m;i+=2)
+                {
+                    long int Value;
+                    cin>>Value;
+                    Odds+=Value;
+//                    cout<<"Odds+="<<Value<<endl;
+                    cin>>Value;
+                    Evens+=Value;
+//                    cout<<"Even+="<<Value<<endl;
+                }
+            }
+            else//Odds
+            {
+                OE=1;
+                for (long int i=0;i<m-1;i+=2)
+                {
+                    long int Value;
+                    cin>>Value;
+                    Odds+=Value;
+//                    cout<<"Odds+="<<Value<<endl;
+                    cin>>Value;
+                    Evens+=Value;
+//                    cout<<"Even+="<<Value<<endl;
+                }
+                long int Values;
+                cin>>Values;
+                Odds+=Values;
+            }
+            long long int Score=Odds-Evens;
+            if (OE==1)
+            {
+                OC.push_back(Score);
+            }
+            else
+            {
+                if (Score>=0)
+                {
+                    ESP+=Score;
+                }
+                else
+                {
+                    ESNe=true;
+                    Score=0-Score;
+                    ESN+=Score;
+                }
+            }
+        }
+        sort(OC.rbegin(), OC.rend());
+//        cout<<"Even Positive: "<<ESP<<endl;
+//        cout<<"Even Negative: "<<ESN<<endl;
+//        for (int i=0;i<OC.size();i++)
+//        {
+//            cout<<OC[i]<<endl;
+//        }
+        Scores+=ESP;
+        if (OC.empty())
+        {
+            Scores-=ESN;
+        }
+        else
+        {
+            Scores+=ESN;
+            long long int NN=OC.size();
+            while (OC.size()>1)
+            {
+                Scores+=OC[0];
+                Scores-=*(OC.end()-1);
+                OC.erase(OC.begin());
+                OC.erase(OC.end()-1);
+            }
+            if (!(OC.empty()))
+            {
+                Scores+=OC[0];
+            }
+        }
+        cout<<Scores<<endl;
+    }
+}
+
+/*
+For each test case:
+Firstly, simplify all the decks by adding up the 1st, 3rd, 5th, 7th... cards and subtract from the 2nd, 4th, 6th... cards. The result is directly what the player will get more than his opponent if the player takes the first one.
+
+If the deck has odd number of cards, then push the result into an array,
+
+Else if the deck has even number of cards:
+See if the result is positive or negative.
+The positive one should just be added to the Final Score.
+For the negative one, check if there is an odd deck that will switch the position of taking the cards. Switching position means that all the negative values can be positive, and then add them to the Final Score.
+Else if there is no odd deck, he has no choice but takes all the negatives.
+
+Lastly the odd deck array.
+Sort it.
+Notice that taking each odd deck's result will change all the signs, we add the largest, subtract from the least, add the second largest, and subtract from the second least... until there is no more odd deck.
+*/
+

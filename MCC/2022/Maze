@@ -1,0 +1,76 @@
+//
+//  main.cpp
+//  MCC_2022(3)
+//
+//  Created by Hea Seng Jun on 30/10/2022.
+//
+
+// Get by others
+
+#include <iostream>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <stdio.h>
+#include <string>
+using namespace std;
+
+#define veci vector<int>
+
+int n;
+int Ra,Rb,Ca,Cb;
+vector<vector<int>> Grid;
+vector<vector<int>> B;
+
+void travel(int x, int y, int mode){
+   if(x==0 || y==0 || x==n+1 || y==n+1) return;
+   if(!B[x][y]) return;
+   B[x][y]=0;
+   if(!mode){
+      Ra=max(x,Ra);
+      Ca=max(y,Ca);
+   }
+   else{
+      Rb=min(x,Rb);
+      Cb=min(y,Cb);
+   }
+   travel(x+1,y,mode);
+   travel(x,y+1,mode);
+   travel(x-1,y,mode);
+   travel(x,y-1,mode);
+}
+
+void solve(){
+   cin>>n;
+   Grid.assign(n+1,veci(n+1,-1));
+   for(int i=0;i<n;i++){
+      for(int j=0;j<n;j++){
+         char x;
+         cin>>x;
+         Grid[i+1][j+1] = (x=='.')? 1 : 0;
+      }
+   }
+   Ra=1; Rb=n; Ca=1; Cb=n;
+   B=Grid;
+   travel(1,1,0); //0: from A
+   B=Grid;
+   travel(n,n,1); //1: from B
+
+   if(Ra==n && Ca==n && Rb==1 && Cb==1) cout<<"0\n";
+   else if(Rb-Ra<=2 || Cb-Ca<=2) cout<<"1\n";
+   else cout<<"2\n";
+
+   Grid.clear();
+   B.clear();
+}
+
+int main(void) {
+   freopen("input.txt", "r", stdin);
+   freopen("output.txt", "w", stdout);
+   int t;
+   cin >> t;
+   for (int _t = 0; _t < t; _t++) {
+      solve();
+   }
+}
+
